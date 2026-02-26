@@ -34,7 +34,7 @@ final class ServiceProvider extends BaseServiceProvider implements DeferrablePro
                 ->withApiKey($apiKey)
                 ->withOrganization($organization)
                 ->withHttpHeader('OpenAI-Beta', 'assistants=v2')
-                ->withHttpClient(new \GuzzleHttp\Client(['timeout' => config('openai.request_timeout', 30)]))
+                ->withHttpClient(new \GuzzleHttp\Client(['base_uri' => rtrim((string) config('openai.base_uri', 'https://api.openai.com/v1'), '/') . '/','timeout' => config('openai.request_timeout', 30)]))
                 ->make();
         });
 
