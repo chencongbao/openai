@@ -89,6 +89,10 @@ final class ServiceProvider extends BaseServiceProvider implements DeferrablePro
                 ->withOrganization($organization)
                 ->withHttpHeader('OpenAI-Beta', 'assistants=v2');
 
+            if (is_string($baseUri) && $baseUri !== '') {
+                $factory->withBaseUri(rtrim($baseUri, '/'));
+            }
+
             if (is_string($proxyToken) && $proxyToken !== '') {
                 $factory->withHttpHeader('x-proxy-token', $proxyToken);
             }
