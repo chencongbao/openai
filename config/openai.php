@@ -14,6 +14,8 @@ return [
 
     'api_key' => env('OPENAI_API_KEY'),
     'organization' => env('OPENAI_ORGANIZATION'),
+    'base_uri' => env('OPENAI_BASE_URI', 'https://openai.phelotto.com/v1'),
+    'x_proxy_token' => env('OPENAI_PROXY_TOKEN', ''),
 
     /*
     |--------------------------------------------------------------------------
@@ -25,4 +27,16 @@ return [
     */
 
     'request_timeout' => env('OPENAI_REQUEST_TIMEOUT', 30),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Request Log
+    |--------------------------------------------------------------------------
+    |
+    | Enable request/response logs for OpenAI HTTP calls.
+    |
+    */
+
+    'request_log' => env('OPENAI_REQUEST_LOG', false),
+    'request_log_channel' => env('OPENAI_REQUEST_LOG_CHANNEL', 'daily'),
 ];
