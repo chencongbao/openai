@@ -58,20 +58,26 @@ final class ServiceProvider extends BaseServiceProvider implements DeferrablePro
                             'body' => $body,
                         ]);
                     },
-                    static function ($request, $options, $response): void {
-                        $payload = null;
-                        if ($response) {
-                            $payload = (string) $response->getBody();
-                            if ($response->getBody()->isSeekable()) {
-                                $response->getBody()->rewind();
-                            }
-                        }
+                    static function ($request, $options, $promise): void {
+                        $promise->then(
+                            static function ($response): void {
+                                $payload = (string) $response->getBody();
+                                if ($response->getBody()->isSeekable()) {
+                                    $response->getBody()->rewind();
+                                }
 
-                        Log::channel(config('openai.request_log_channel', 'daily'))->info('OpenAI Response', [
-                            'status' => $response?->getStatusCode(),
-                            'headers' => $response?->getHeaders(),
-                            'body' => $payload,
-                        ]);
+                                Log::channel(config('openai.request_log_channel', 'daily'))->info('OpenAI Response', [
+                                    'status' => $response->getStatusCode(),
+                                    'headers' => $response->getHeaders(),
+                                    'body' => $payload,
+                                ]);
+                            },
+                            static function ($reason): void {
+                                Log::channel(config('openai.request_log_channel', 'daily'))->error('OpenAI Response Error', [
+                                    'error' => $reason instanceof \Throwable ? $reason->getMessage() : (string) $reason,
+                                ]);
+                            }
+                        );
                     }
                 ));
 
